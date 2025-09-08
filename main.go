@@ -15,6 +15,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	})
+
 	log.Println("[INFO] Starting Azure Identity Proxy...")
 
 	endpoint := os.Getenv("IDENTITY_ENDPOINT")
@@ -31,13 +32,15 @@ func main() {
 
 	armApiVersion := os.Getenv("ARM_MSI_API_VERSION")
 	if armApiVersion == "" {
-		log.Fatal("[FATAL] ARM_MSI_API_VERSION environment variable is required")
+		armApiVersion = "2019-08-01"
+		log.Printf("[WARN] ARM_MSI_API_VERSION not set, defaulting to %s", armApiVersion)
 	}
 	log.Printf("[INFO] Using ARM_MSI_API_VERSION: %s", armApiVersion)
 
 	proxyPort := os.Getenv("ARM_MSI_API_PROXY_PORT")
 	if proxyPort == "" {
-		log.Fatal("[FATAL] ARM_MSI_API_PROXY_PORT environment variable is required")
+		proxyPort = "42300"
+		log.Printf("[WARN] ARM_MSI_API_PROXY_PORT not set, defaulting to %s", proxyPort)
 	}
 	log.Printf("[INFO] Proxy will listen on port: %s", proxyPort)
 
